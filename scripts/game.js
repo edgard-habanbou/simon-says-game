@@ -1,69 +1,70 @@
+// Vanilla JavaScript equivalent
+
 let gamePattern = [];
 let userClickedPattern = [];
 let level = 0;
 let gameStarted = false;
 
-$("#green").click(function () {
+document.getElementById("green").addEventListener("click", function () {
   PressedAnimation("green");
   PressedSound("green");
   if (gameStarted) userClickedPattern.push("green");
   StartGame();
 });
 
-$("#red").click(function () {
+document.getElementById("red").addEventListener("click", function () {
   PressedAnimation("red");
   PressedSound("red");
   if (gameStarted) userClickedPattern.push("red");
   StartGame();
 });
 
-$("#yellow").click(function () {
+document.getElementById("yellow").addEventListener("click", function () {
   PressedAnimation("yellow");
   PressedSound("yellow");
   if (gameStarted) userClickedPattern.push("yellow");
   StartGame();
 });
 
-$("#blue").click(function () {
+document.getElementById("blue").addEventListener("click", function () {
   PressedAnimation("blue");
   PressedSound("blue");
   if (gameStarted) userClickedPattern.push("blue");
-
   StartGame();
 });
 
-// This function is used to play sound when user clicks on a colof
+// This function is used to play sound when the user clicks on a color
 function PressedSound(color) {
   var audio = new Audio("./sounds/" + color + ".mp3");
   audio.play();
 }
 
-// This function is used to play animation when user clicks on a color
+// This function is used to play animation when the user clicks on a color
 function PressedAnimation(color) {
-  $("#" + color).addClass("pressed");
+  document.getElementById(color).classList.add("pressed");
   setTimeout(function () {
-    $("#" + color).removeClass("pressed");
+    document.getElementById(color).classList.remove("pressed");
   }, 50);
 }
 
 // This function is used to check if the game is started or not
 function StartGame() {
-  gameStarted == false ? startGame() : checkAnswer();
+  gameStarted === false ? startGame() : checkAnswer();
 }
 
 // This function is used to start the game
 function startGame() {
-  $("#level-title").text("Level " + 1);
+  document.getElementById("level-title").textContent = "Level " + 1;
   setTimeout(function () {
     nextLevel();
   }, 500);
   gameStarted = true;
 }
 
-// This function is used to advance the user to next level
+// This function is used to advance the user to the next level
 function nextLevel() {
   level++;
-  $("#level-title").text("Level " + level);
+  document.getElementById("level-title").textContent = "Level " + level;
   geneteRandomColor();
 }
 
@@ -79,7 +80,7 @@ function geneteRandomColor() {
 
 function checkAnswer() {
   // Check if the user's input length matches the game pattern length
-  userClickedPattern.length == gamePattern.length
+  userClickedPattern.length === gamePattern.length
     ? comparePatterns() // If they match, compare the patterns
     : validateUserInput(); // If not, validate the user's input
 }
@@ -98,7 +99,7 @@ function comparePatterns() {
 
 function validateUserInput() {
   for (let i = 0; i < userClickedPattern.length; i++) {
-    if (userClickedPattern[i] != gamePattern[i]) {
+    if (userClickedPattern[i] !== gamePattern[i]) {
       gameOver();
     }
   }
@@ -114,10 +115,11 @@ function restart() {
 function gameOver() {
   var audio = new Audio("./sounds/wrong.mp3");
   audio.play();
-  $("body").addClass("game-over");
+  document.body.classList.add("game-over");
   setTimeout(function () {
-    $("body").removeClass("game-over");
+    document.body.classList.remove("game-over");
   }, 50);
-  $("#level-title").text("Game Over, Press Any Key to Restart");
+  document.getElementById("level-title").textContent =
+    "Game Over, Press Any Key to Restart";
   restart();
 }

@@ -1,105 +1,112 @@
+let gamePattern = [];
 let userClickedPattern = [];
-const buttonColors = ["red", "blue", "green", "yellow"];
 let level = 0;
-let started = false;
-let counter = 0;
+let gameStarted = false;
 
 $("#green").click(function () {
-  PressedAnimationAndSound("green");
-  if (started) userClickedPattern.push("green");
-  counter++;
-  gameStarted();
+  PressedAnimation("green");
+  PressedSound("green");
+  if (gameStarted) userClickedPattern.push("green");
+  StartGame();
 });
 
 $("#red").click(function () {
-  PressedAnimationAndSound("red");
-  if (started) userClickedPattern.push("red");
-  counter++;
-  gameStarted();
+  PressedAnimation("red");
+  PressedSound("red");
+  if (gameStarted) userClickedPattern.push("red");
+  StartGame();
 });
 
 $("#yellow").click(function () {
-  PressedAnimationAndSound("yellow");
-  if (started) userClickedPattern.push("yellow");
-  counter++;
-  gameStarted();
+  PressedAnimation("yellow");
+  PressedSound("yellow");
+  if (gameStarted) userClickedPattern.push("yellow");
+  StartGame();
 });
 
 $("#blue").click(function () {
-  PressedAnimationAndSound("blue");
-  if (started) {
-    userClickedPattern.push("blue");
-    counter++;
-  }
-  gameStarted();
+  PressedAnimation("blue");
+  PressedSound("blue");
+  if (gameStarted) userClickedPattern.push("blue");
+
+  StartGame();
 });
 
-function PressedAnimationAndSound(color) {
-  $("#" + color).addClass("pressed");
-  setTimeout(function () {
-    $("#" + color).removeClass("pressed");
-  }, 50);
+// This function is used to play sound when user clicks on a colof
+function PressedSound(color) {
   var audio = new Audio("./sounds/" + color + ".mp3");
   audio.play();
 }
 
-function gameStarted() {
-  if (started == false) {
-    $("#level-title").text("Level " + 1);
-    setTimeout(function () {
-      nextLevel();
-    }, 500);
-    started = true;
-  } else {
-    checkAnswer();
-  }
+// This function is used to play animation when user clicks on a color
+function PressedAnimation(color) {
+  $("#" + color).addClass("pressed");
+  setTimeout(function () {
+    $("#" + color).removeClass("pressed");
+  }, 50);
 }
 
-let gamePattern = [];
+// This function is used to check if the game is started or not
+function StartGame() {
+  gameStarted == false ? startGame() : checkAnswer();
+}
+
+// This function is used to start the game
+function startGame() {
+  $("#level-title").text("Level " + 1);
+  setTimeout(function () {
+    nextLevel();
+  }, 500);
+  gameStarted = true;
+}
+
+// This function is used to advance the user to next level
 function nextLevel() {
   level++;
   $("#level-title").text("Level " + level);
+  geneteRandomColor();
+}
+
+// This function generates a random color and shows it to the user
+function geneteRandomColor() {
   let randomNumber = Math.floor(Math.random() * 4);
+  const buttonColors = ["red", "blue", "green", "yellow"];
   let randomColor = buttonColors[randomNumber];
   gamePattern.push(randomColor);
-  PressedAnimationAndSound(randomColor);
-  counter = 0;
+  PressedAnimation(randomColor);
+  PressedSound(randomColor);
 }
 
 function checkAnswer() {
-  console.log("counter", counter);
-  console.log("level", level);
-  console.log("userClickedPattern", userClickedPattern);
-  console.log("gamePattern", gamePattern);
-  console.log(
-    userClickedPattern[level - counter],
-    gamePattern[level - counter]
-  );
-  console.log(
-    "------------------------------------------------------------------------"
-  );
+  // Check if the user's input length matches the game pattern length
+  userClickedPattern.length == gamePattern.length
+    ? comparePatterns() // If they match, compare the patterns
+    : validateUserInput(); // If not, validate the user's input
+}
 
-  if (userClickedPattern.length == gamePattern.length) {
-    if (JSON.stringify(gamePattern) === JSON.stringify(userClickedPattern)) {
-      setTimeout(function () {
-        nextLevel();
-      }, 1000);
-      userClickedPattern = [];
-    } else {
-      gameOver();
-    }
+function comparePatterns() {
+  // Check if the user's input matches the game pattern
+  if (JSON.stringify(gamePattern) === JSON.stringify(userClickedPattern)) {
+    setTimeout(function () {
+      nextLevel(); // If they match
+    }, 1000);
+    userClickedPattern = [];
   } else {
-    for (let i = 0; i < userClickedPattern.length; i++) {
-      if (userClickedPattern[i] != gamePattern[i]) {
-        gameOver();
-      }
+    gameOver(); // If they don't match
+  }
+}
+
+function validateUserInput() {
+  for (let i = 0; i < userClickedPattern.length; i++) {
+    if (userClickedPattern[i] != gamePattern[i]) {
+      gameOver();
     }
   }
 }
+
 function restart() {
   level = 0;
-  started = false;
-  counter = 0;
+  gameStarted = false;
   gamePattern = [];
   userClickedPattern = [];
 }

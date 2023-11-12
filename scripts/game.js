@@ -4,34 +4,17 @@ let gamePattern = [];
 let userClickedPattern = [];
 let level = 0;
 let gameStarted = false;
+const buttonColors = ["red", "blue", "green", "yellow"];
 
-document.getElementById("green").addEventListener("click", function () {
-  PressedAnimation("green");
-  PressedSound("green");
-  if (gameStarted) userClickedPattern.push("green");
-  StartGame();
-});
-
-document.getElementById("red").addEventListener("click", function () {
-  PressedAnimation("red");
-  PressedSound("red");
-  if (gameStarted) userClickedPattern.push("red");
-  StartGame();
-});
-
-document.getElementById("yellow").addEventListener("click", function () {
-  PressedAnimation("yellow");
-  PressedSound("yellow");
-  if (gameStarted) userClickedPattern.push("yellow");
-  StartGame();
-});
-
-document.getElementById("blue").addEventListener("click", function () {
-  PressedAnimation("blue");
-  PressedSound("blue");
-  if (gameStarted) userClickedPattern.push("blue");
-  StartGame();
-});
+function addClickListener(color) {
+  document.getElementById(color).addEventListener("click", function () {
+    PressedAnimation(color);
+    PressedSound(color);
+    if (gameStarted) userClickedPattern.push(color);
+    checkIfStarted();
+  });
+}
+buttonColors.forEach(addClickListener);
 
 // This function is used to play sound when the user clicks on a color
 function PressedSound(color) {
@@ -48,7 +31,7 @@ function PressedAnimation(color) {
 }
 
 // This function is used to check if the game is started or not
-function StartGame() {
+function checkIfStarted() {
   gameStarted === false ? startGame() : checkAnswer();
 }
 
@@ -65,13 +48,12 @@ function startGame() {
 function nextLevel() {
   level++;
   document.getElementById("level-title").textContent = "Level " + level;
-  geneteRandomColor();
+  generateRandomColor();
 }
 
 // This function generates a random color and shows it to the user
-function geneteRandomColor() {
+function generateRandomColor() {
   let randomNumber = Math.floor(Math.random() * 4);
-  const buttonColors = ["red", "blue", "green", "yellow"];
   let randomColor = buttonColors[randomNumber];
   gamePattern.push(randomColor);
   PressedAnimation(randomColor);
